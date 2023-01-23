@@ -1,20 +1,24 @@
-const Hello = (props) => {
-  console.log(props)
-  return (
-    <div>
-      <p>Hello {props.name}</p>
-    </div>
-  )
-}
+import { useState } from 'react'
 
 
 const App = () => {
+  const [ counter, setCounter ] = useState(0)
+
+  const handleClick = () => {
+    setCounter(counter+1)
+  }
+
+  const resetCounter = () => {
+    setCounter(0)
+  }
+
+
   return (
     <div>
       <h1>Greetings</h1>
-      <Hello name="John" age={23}/>
-      <Hello name="George"/>
-      <Hello name="Ringo"/>
+      <div>{ counter }</div>
+      <button onClick={handleClick}>Click me</button>
+      <button onClick={resetCounter}>Reset</button>
     </div>
     )
     
