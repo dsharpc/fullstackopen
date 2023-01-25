@@ -1,5 +1,5 @@
 import { useState, useEffect} from 'react'
-import axios from 'axios'
+import contactService from './services/contacts'
 import SearchBox from './components/SearchBox'
 import PersonForm from './components/PersonForm'
 import PersonsDisplay from './components/PersonsDisplay'
@@ -12,24 +12,45 @@ const App = () => {
   const [newSearch, setNewSearch] = useState('')
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons")
-         .then(response => {
-          setPersons(response.data)
-         }
-         )
+    contactService
+      .getAll()
+      .then(contacts => setPersons(contacts))
   }, [])
 
 
 
   const addPerson = (event) => {
     event.preventDefault()
-    if (persons.some(p => p.name === newName)){
-      alert(`${newName} is already added to phonebook`)
+    const personToAdd = persons.find(p => p.name === newName)
+    
+    if (personToAdd){
+      const updateNumber = window.confirm(`${newName} is already added to phonebook, replace old number with new one?`)
+      if (updateNumber){
+        const updatedPerson = { ...personToAdd, number: newNumber}
+        contactService
+          .update(updatedPerson)
+          .then(addedPerson => {
+            const newPersons = persons.map(person => person.id !== addedPerson.id ? person : addedPerson)
+            setPersons(newPersons)
+          })
+      }
+      
     }else{
-      setPersons(persons.concat({name : newName, number: newNumber}))
+      contactService
+        .create({name : newName, number: newNumber})
+        .then(newPerson => setPersons(persons.concat(newPerson)))
     }
     setNewName('')
     setNewNumber('')
+  }
+
+  const removePerson = (id) => {
+    const personToRemove = persons.find(person => person.id === id)
+    if (window.confirm(`Delete ${personToRemove.name} from phonebook?`)){
+      contactService
+        .remove(id)
+        .then(() => setPersons(persons.filter(person => person.id !== id)))
+    }
   }
 
   const handleSearchInput = (event) => setNewSearch(event.target.value)
@@ -53,7 +74,7 @@ const App = () => {
                   newNumber={newNumber}></PersonForm>
 
       <h2>Numbers</h2>
-        <PersonsDisplay persons={personsToShow}></PersonsDisplay>
+        <PersonsDisplay persons={personsToShow} personRemover={removePerson}></PersonsDisplay>
     </div>
   )
 }
