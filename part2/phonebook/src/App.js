@@ -3,6 +3,7 @@ import contactService from './services/contacts'
 import SearchBox from './components/SearchBox'
 import PersonForm from './components/PersonForm'
 import PersonsDisplay from './components/PersonsDisplay'
+import Notification from './components/Notification'
 
 
 const App = () => {
@@ -10,6 +11,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newSearch, setNewSearch] = useState('')
+  const [notificationMesssage, setNotificationMessage] = useState('')
+  const [notificationColour, setNotificationColour] = useState('')
 
   useEffect(() => {
     contactService
@@ -33,12 +36,26 @@ const App = () => {
             const newPersons = persons.map(person => person.id !== addedPerson.id ? person : addedPerson)
             setPersons(newPersons)
           })
+          .catch(() => {
+            setNotificationMessage(`Information of ${newName} has already been removed from the server`)
+            setNotificationColour("red")
+            setTimeout(() => {
+              setNotificationMessage('')
+            }, 3000)
+          })
       }
       
     }else{
       contactService
         .create({name : newName, number: newNumber})
-        .then(newPerson => setPersons(persons.concat(newPerson)))
+        .then(newPerson => {
+          setNotificationMessage(`Added ${newName} to phonebook`)
+          setNotificationColour("green")
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 2000)
+          setPersons(persons.concat(newPerson))
+        })
     }
     setNewName('')
     setNewNumber('')
@@ -62,6 +79,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      
+      <Notification message={notificationMesssage} highlightColour={notificationColour}></Notification>
 
       <SearchBox handleSearchInput={handleSearchInput} value={newSearch}></SearchBox>
 
