@@ -29,6 +29,11 @@
       "content": "testing",
       "important": false,
       "id": 6
+    },
+    {
+      "content": "fdsa",
+      "important": true,
+      "id": 7
     }
   ]
 }
