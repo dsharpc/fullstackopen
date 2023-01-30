@@ -48,23 +48,19 @@ app.use(express.static('build'))
   })
 
 
-  app.post('/api/notes', (request, response) => {
+  app.post('/api/notes', (request, response, next) => {
     const body = request.body
-
-    if (!body.content) {
-        return response.status(400).json({
-            error: "Missing 'content' field from payload"
-        })
-    }
     
     const note = new Note({
         content: body.content,
         important: body.important || false,
+        date: new Date(),
       })
 
     note.save().then(savedNote => {
       response.json(savedNote)
     })
+    .catch(error => next(error))
   })
 
   app.put('/api/notes/:id', (request, response, next) => {
@@ -75,7 +71,10 @@ app.use(express.static('build'))
       important: body.important
     }
 
-    Note.findByIdAndUpdate(request.params.id, note, {new: true})
+    Note.findByIdAndUpdate(
+      request.params.id, 
+      note, 
+      {new: true, runValidators: true, context: 'query'})
       .then(updatedNote => {
         response.json(updatedNote)
       })
@@ -88,7 +87,10 @@ app.use(express.static('build'))
   
     if (error.name === 'CastError'){
       return response.status(400).send({error: 'malformatted id'})
+    } else if (error.name === 'ValidationError') {
+      return response.status(400).json({error: error.message})
     }
+
     next(error)
   }
   
