@@ -1,6 +1,8 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
 
 const app = express()
 
@@ -13,29 +15,6 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :p
 
 app.use(express.static('build'))
 
-let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
-
 app.get('/info', (request, response) => {
     const infoMessage = `The phonebook has info for ${persons.length} people`
     const date = new Date()
@@ -46,21 +25,24 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons)
+    Person.find({})
+        .then(persons => response.json(persons))
 })
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
-    if (person){
-        response.json(person)
-    } else {
-        response.status(404).json({"error": "Person ID not found"})
-    }
+    const id = request.params.id
+    Person.findById(id)
+        .then(person => {
+            response.json(person)
+        })
+        .catch(error => {
+            response.status(404).json({error: "Person ID not found", message: error.message})
+    
+        })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
+    const id = request.params.id
     persons = persons.filter(person => person.id !== id)
 
     response.status(204).end()
@@ -69,7 +51,6 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
     const body = request.body
-    const newId = Math.round(Math.random() * 10000)
     
     if (!body.name || !body.number){
         return response.status(400).json(
@@ -77,17 +58,11 @@ app.post('/api/persons', (request, response) => {
         )
     }
 
-    const matchedPerson = persons.find(person => person.name === body.name)
-    if (matchedPerson) {
-        return response.status(400).json(
-            {error: "name must be unique"}
-        )
-    }
-    
-    body.id = newId
-
-    persons = persons.concat(body)
-    response.json(body)
+    const newPerson = new Person({name: body.name, number: body.number})
+    newPerson.save()
+        .then(addedPerson => {
+            response.json(addedPerson)
+        })
 })
 
 const unknownEndpoint = (request, response) => {
