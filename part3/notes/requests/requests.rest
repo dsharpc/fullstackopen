@@ -13,7 +13,7 @@ GET http://localhost:3001/api/notes/5c41c90e84d891c15fa3431
 DELETE http://localhost:3001/api/notes/63d8086267732b94d578bce6
 
 ###
-PUT http://localhost:3001/api/notes 
+PUT http://localhost:3001/api/notes/63d7fc3e9b9fc378d5d9c772
 content-type: application/json
 
-{"content": "lolo", "important": true}
+{"content": "lolo", "important": false}

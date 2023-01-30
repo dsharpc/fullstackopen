@@ -4,10 +4,19 @@ GET http://localhost:3001/api/persons
 GET http://localhost:3001/api/persons/63d7f4d1a1906bb97e8a299c
 
 ###
-DELETE http://localhost:3001/api/persons/1923
+DELETE http://localhost:3001/api/persons/63d8034154c3c456730ef09
 
 ###
 POST http://localhost:3001/api/persons
+Content-Type: application/json 
+
+{
+    "name": "Harry Kane",
+    "number": "+44 4542354235fd23"
+}
+
+###
+PUT http://localhost:3001/api/persons/63d8033454c3c4567730ef06
 Content-Type: application/json 
 
 {
