@@ -59,27 +59,32 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
-    
-    if (!body.name || !body.number){
-        return response.status(500).json(
-            {error: "make sure name and number are in the payload"}
-        )
-    }
 
-    const newPerson = new Person({name: body.name, number: body.number})
-    newPerson.save()
-        .then(addedPerson => {
-            response.json(addedPerson)
+    Person.find({name: body.name})
+        .then(matchedPerson => {
+            if (matchedPerson.length > 0) {
+                response.status(500).json({error: "Contact already exists"})
+            }else {
+                const newPerson = new Person({name: body.name, number: body.number})
+                newPerson.save()
+                    .then(addedPerson => {
+                        response.json(addedPerson)
+                    })
+                    .catch(error => next(error))
+            }
         })
+        .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
     const body = request.body
 
-    Person.findByIdAndUpdate(id, {name: body.name, number: body.number}, {new: true})
+    Person.findByIdAndUpdate(id,
+        {name: body.name, number: body.number},
+        {new: true, runValidators: true, context: 'query'})
         .then(newPerson => {
             response.json(newPerson)
         })
@@ -89,6 +94,8 @@ app.put('/api/persons/:id', (request, response, next) => {
 const errorHandler = (error, request, response, next) => {
     if (error.name === "CastError"){
         response.status(500).json({error: "malformatted id"})
+    } else if (error.name === "ValidationError"){
+        response.status(500).json({error: error.message})
     }
     next(error)
 }

@@ -14,9 +14,23 @@ mongoose.connect(uri)
         process.exit(1)
     })
 
-const personSchema = mongoose.Schema({
-    name: String,
-    number: String
+const personSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        minLength: 3,
+        required: true,
+        unique: true,
+    },
+    number: {
+        type: String,
+        minLength: 8,
+        validate: {
+            validator: function(v) {
+                return /^(\d{2,3}-)?\d+$/.test(v)
+            }
+        },
+        required: true,
+    }
 })
 
 personSchema.set('toJSON',{

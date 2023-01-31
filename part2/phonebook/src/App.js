@@ -33,16 +33,32 @@ const App = () => {
         contactService
           .update(updatedPerson)
           .then(addedPerson => {
+            if (!addedPerson){
+              setNotificationMessage(`Information of ${newName} has already been removed from the server`)
+              setNotificationColour("red")
+              setTimeout(() => {
+                setNotificationMessage('')
+              }, 3000)
+            }else{
             const newPersons = persons.map(person => person.id !== addedPerson.id ? person : addedPerson)
             setPersons(newPersons)
+            }
           })
-          .catch(() => {
-            setNotificationMessage(`Information of ${newName} has already been removed from the server`)
+          .catch(error => {
+            console.log(error)
+            setNotificationMessage(`Error encountered: ${error.response.data.error}`)
             setNotificationColour("red")
             setTimeout(() => {
-              setNotificationMessage('')
-            }, 3000)
+              setNotificationMessage(null)
+            }, 5000)
           })
+          // .catch(() => {
+          //   setNotificationMessage(`Information of ${newName} has already been removed from the server`)
+          //   setNotificationColour("red")
+          //   setTimeout(() => {
+          //     setNotificationMessage('')
+          //   }, 3000)
+          // })
       }
       
     }else{
@@ -55,6 +71,13 @@ const App = () => {
             setNotificationMessage(null)
           }, 2000)
           setPersons(persons.concat(newPerson))
+        })
+        .catch(error => {
+          setNotificationMessage(`Error encountered: ${error.response.data.error}`)
+          setNotificationColour("red")
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
         })
     }
     setNewName('')
