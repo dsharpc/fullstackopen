@@ -1,4 +1,5 @@
 const supertest = require('supertest')
+const mongoose = require('mongoose')
 const app = require('../app')
 const Blog = require('../models/blog')
 const testHelper = require('./test_helper')
@@ -19,4 +20,48 @@ test('returns the correct amount of blogs', async () => {
 
   expect(blogsInDb.body).toHaveLength(testHelper.testBlogs.length)
 
+})
+
+test('the unique identifier for a blog is id', async () => {
+  const blogsInDb = await api.get('/api/blogs')
+
+  const exampleBlog = blogsInDb.body[0]
+
+  expect(exampleBlog.id).toBeDefined()
+})
+
+test('post request creates a new blog', async () => {
+  const blogToAdd = { title: "test", author:"test", url: "test.com", likes: 5 }
+  await api.post('/api/blogs').send( blogToAdd )
+
+  const blogsInDb = await api.get('/api/blogs')
+
+  expect(blogsInDb.body).toHaveLength(testHelper.testBlogs.length + 1)
+  expect(blogsInDb.body.map(blog => blog.title)).toContainEqual(blogToAdd.title)
+})
+
+test('missing likes defaults to zero', async () => {
+  const blogToAdd = { title: "test", author:"test", url: "test.com" }
+  await api.post('/api/blogs').send( blogToAdd )
+
+  const blogsInDb = await api.get('/api/blogs')
+
+  const justAddedBlog = blogsInDb.body.find(blog => blog.title === blogToAdd.title)
+  expect(justAddedBlog.likes).toBe(0)
+
+})
+
+test('missing title raises 400 error', async () => {
+  const missingTitle = { author: "test", url: "test" }
+  await api.post('/api/blogs').send(missingTitle).expect(400)
+})
+
+test('missing url raises 400 error', async () => {
+  const missingUrl = { author: "test", title: "test" }
+  await api.post('/api/blogs').send(missingUrl).expect(400)
+})
+
+
+afterAll(async () => {
+  await mongoose.connection.close()
 })
