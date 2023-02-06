@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const app = require('../app')
 const Blog = require('../models/blog')
 const testHelper = require('./test_helper')
+const { update } = require('lodash')
 
 const api = supertest(app)
 
@@ -59,6 +60,28 @@ test('missing title raises 400 error', async () => {
 test('missing url raises 400 error', async () => {
   const missingUrl = { author: "test", title: "test" }
   await api.post('/api/blogs').send(missingUrl).expect(400)
+})
+
+
+test('delete a blog by id', async () => {
+  const blogsInDb = await api.get('/api/blogs')
+  const idToDelete = blogsInDb.body[0].id
+
+  await api.delete(`/api/blogs/${idToDelete}`).expect(204)
+})
+
+test('update a blog by id', async () => {
+  let blogsInDb = await api.get('/api/blogs')
+  const blogToUpdate = blogsInDb.body[0]
+  const newBlogContent = { ...blogsInDb, likes: 128 }
+
+  await api.put(`/api/blogs/${blogToUpdate.id}`)
+    .send(newBlogContent)
+    .expect(204)
+
+  blogsInDb = await api.get('/api/blogs')
+  const updatedBlog = blogsInDb.body.find(blog => blog.id === blogToUpdate.id)
+  expect(updatedBlog.likes).toBe(128)
 })
 
 
