@@ -1,5 +1,6 @@
 POST http://localhost:3001/api/notes
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhbiIsImlkIjoiNjNlMjllM2VhZDMwM2M3MDgwYmMzYmU2IiwiaWF0IjoxNjc1Nzk4MDEyLCJleHAiOjE2NzU3OTgwNzJ9.ICkWgP-E9ZICe8yoaXSYhz4IZjbdFQLb1EE8dSGl2MQ
 
 {
   "content": "Ensure that everything still works",
