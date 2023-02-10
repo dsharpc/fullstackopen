@@ -51,6 +51,20 @@ const testBlogs = [
   }
 ]
 
+const testUsers = [
+  {
+    username: "user1",
+    name: "forename surname",
+    password: "password1"
+  },
+  {
+    username: "user2",
+    name: "name surname",
+    password: "password2"
+  }
+]
+
 module.exports = {
-  testBlogs
+  testBlogs,
+  testUsers
 }
