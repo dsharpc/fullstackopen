@@ -3,6 +3,7 @@ import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import NotificationMessage from './components/NotificationMessage'
+import Toggable from './components/Toggable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -66,9 +67,17 @@ const App = () => {
 
       {notificationMessage && <NotificationMessage message={notificationMessage} type={notificationType} />}
 
-      {user && <NewBlogForm setNotificationMessage={setNotificationMessage} setNotificationType={setNotificationType}/>}
+      {user && 
+      <Toggable buttonLabel="add new blog">
+        <NewBlogForm setNotificationMessage={setNotificationMessage}
+                     setNotificationType={setNotificationType}
+                     blogs={blogs}
+                     setBlogs={setBlogs}
+                     user={user}/>
+      </Toggable>
+      }
       
-      {user && <Blogs blogs={blogs} />}
+      {user && <Blogs blogs={blogs} setBlogs={setBlogs}/>}
     </div>
   )
 }
