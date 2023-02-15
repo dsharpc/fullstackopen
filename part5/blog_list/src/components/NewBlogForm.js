@@ -10,7 +10,7 @@ const NewBlogForm = ({ setNotificationMessage, setNotificationType, blogs, setBl
 
   const handleCreationSubmit = async (event) => {
     event.preventDefault()
-    const blogData = { title, author, url}
+    const blogData = { title, author, url }
     const addedBlog = await blogService.create(blogData)
     setNotificationMessage(`A new blog ${title} by ${author} has been added`)
     setNotificationType('success')
@@ -20,7 +20,7 @@ const NewBlogForm = ({ setNotificationMessage, setNotificationType, blogs, setBl
     setBlogs(blogs.concat({ ...addedBlog, user }))
 
   }
-  
+
 
   return (
     <form onSubmit={handleCreationSubmit}>

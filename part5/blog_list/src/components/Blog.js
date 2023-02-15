@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import Toggable from "./Toggable"
+import Toggable from './Toggable'
 import blogService from '../services/blogs'
 
-const Blog = ({blog, blogs, setBlogs}) => {
+const Blog = ({ blog, blogs, setBlogs }) => {
   const [numLikes, setNumLikes] = useState(blog.likes)
 
   const blogStyle = {
@@ -12,10 +12,10 @@ const Blog = ({blog, blogs, setBlogs}) => {
     borderWidth: 1,
     marginBottom: 5
   }
-  
+
   const handleAddLike = async () => {
     setNumLikes(numLikes + 1)
-    
+
     const newBlogData = {
       user: blog.user ? blog.user.id : null,
       likes: numLikes + 1,
@@ -31,7 +31,7 @@ const Blog = ({blog, blogs, setBlogs}) => {
     const remove = window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
     if (remove) {
       await blogService.deleteBlog(blog.id)
-      setBlogs(blogs.filter(b => b.id !== blog.id))  
+      setBlogs(blogs.filter(b => b.id !== blog.id))
     }
   }
 
@@ -44,7 +44,7 @@ const Blog = ({blog, blogs, setBlogs}) => {
         <p>created by: {blog.user ? blog.user.name : ''}</p>
         <button onClick={handleDeletion}>Delete Post</button>
       </Toggable>
-    </div>  
+    </div>
   )
 }
 

@@ -27,7 +27,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [user])
 
   const handleLoginSubmit = async (event) => {
@@ -48,35 +48,34 @@ const App = () => {
     setTimeout(() => {
       setNotificationMessage(null)
     }, 5000)
-    
+
   }
 
   return (
     <div>
       {!user ? <LoginForm username={username}
-                 setUsername={setUsername}
-                 password={password}
-                 setPassword={setPassword}
-                 handleLoginSubmit={handleLoginSubmit}/> 
-              : <button onClick={() => {
-                setUser(null)
-                window.localStorage.clear()  
-              }
-                }>Log Out</button>}
+        setUsername={setUsername}
+        password={password}
+        setPassword={setPassword}
+        handleLoginSubmit={handleLoginSubmit}/>
+        : <button onClick={() => {
+          setUser(null)
+          window.localStorage.clear()
+        }
+        }>Log Out</button>}
       {user && <p>Logged in as {user.name} </p>}
 
       {notificationMessage && <NotificationMessage message={notificationMessage} type={notificationType} />}
 
-      {user && 
+      {user &&
       <Toggable buttonLabel="add new blog">
         <NewBlogForm setNotificationMessage={setNotificationMessage}
-                     setNotificationType={setNotificationType}
-                     blogs={blogs}
-                     setBlogs={setBlogs}
-                     user={user}/>
+          setNotificationType={setNotificationType}
+          blogs={blogs}
+          setBlogs={setBlogs}
+          user={user}/>
       </Toggable>
       }
-      
       {user && <Blogs blogs={blogs} setBlogs={setBlogs}/>}
     </div>
   )
