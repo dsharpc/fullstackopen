@@ -36,13 +36,15 @@ const Blog = ({ blog, blogs, setBlogs }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blogPost">
       {blog.title} {blog.author}
-      <Toggable buttonLabel="show detail">
-        <p>url: {blog.url}</p>
-        <p>likes: {numLikes} <button onClick={handleAddLike}>Like</button></p>
-        <p>created by: {blog.user ? blog.user.name : ''}</p>
-        <button onClick={handleDeletion}>Delete Post</button>
+      <Toggable buttonLabel="show detail" className='blogPostDetail'>
+        <div >
+          <p>url: {blog.url}</p>
+          <p>likes: {numLikes} <button onClick={handleAddLike}>Like</button></p>
+          <p>created by: {blog.user ? blog.user.name : ''}</p>
+          <button onClick={handleDeletion}>Delete Post</button>
+        </div>
       </Toggable>
     </div>
   )

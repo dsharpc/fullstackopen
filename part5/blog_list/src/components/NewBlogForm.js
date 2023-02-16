@@ -25,9 +25,9 @@ const NewBlogForm = ({ setNotificationMessage, setNotificationType, blogs, setBl
   return (
     <form onSubmit={handleCreationSubmit}>
       <h5>Create new Blog entry</h5>
-      <p>Title: <input value={title} onChange={({ target }) => setTitle(target.value)}></input></p>
-      <p>Author: <input value={author} onChange={({ target }) => setAuthor(target.value)}></input></p>
-      <p>Url: <input value={url} onChange={({ target }) => setUrl(target.value)}></input></p>
+      <p>Title: <input value={title} onChange={({ target }) => setTitle(target.value)} placeholder='Title'></input></p>
+      <p>Author: <input value={author} onChange={({ target }) => setAuthor(target.value)} placeholder='Author'></input></p>
+      <p>Url: <input value={url} onChange={({ target }) => setUrl(target.value)} placeholder='Url'></input></p>
       <button type="submit">Create</button>
     </form>
   )
