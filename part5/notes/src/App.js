@@ -13,8 +13,8 @@ const App = () => {
   const [showAll, setShowAll] = useState(true)
   const [errorMessage, setErrorMessage] = useState(null)
 
-  const [username, setUsername] = useState('') 
-  const [password, setPassword] = useState('') 
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   const noteFormRef = useRef()
@@ -39,31 +39,31 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault()
 
-  try {
+    try {
       const user = await loginService.login({
         username, password
       })
 
-    window.localStorage.setItem(
-      'loggedNoteappUser', JSON.stringify(user)
-    )
-    noteService.setToken(user.token)
-    setUser(user)
-    setUsername('')
-    setPassword('')
-  } catch (expression) {
-    setErrorMessage('Wrong credentials')
-    setTimeout(() => {
-      setErrorMessage(null)
-    }, 5000)
-  }
+      window.localStorage.setItem(
+        'loggedNoteappUser', JSON.stringify(user)
+      )
+      noteService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch (expression) {
+      setErrorMessage('Wrong credentials')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
   }
 
   const addNote = (noteObject) => {
     noteFormRef.current.toggleVisibility()
     noteService
       .create(noteObject)
-        .then(returnedNote => {
+      .then(returnedNote => {
         setNotes(notes.concat(returnedNote))
       })
   }
@@ -72,24 +72,24 @@ const App = () => {
     ? notes
     : notes.filter(note => note.important)
 
-   const toggleImportanceOf = id => {
-      const note = notes.find(n => n.id === id)
-      const changedNote = { ...note, important: !note.important }
-  
-      noteService
-        .update(id, changedNote).then(returnedNote => {
-          setNotes(notes.map(note => note.id !== id ? note : returnedNote))
-        })
-        .catch(error => {
-          setErrorMessage(
-            `Note '${note.content}' was already removed from server`
-          )
-          setTimeout(() => {
-            setErrorMessage(null)
-          }, 5000)
-          setNotes(notes.filter(n => n.id !== id))
-        })
-    }
+  const toggleImportanceOf = id => {
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+
+    noteService
+      .update(id, changedNote).then(returnedNote => {
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+      })
+      .catch(() => {
+        setErrorMessage(
+          `Note '${note.content}' was already removed from server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+        setNotes(notes.filter(n => n.id !== id))
+      })
+  }
 
 
   return (
@@ -97,14 +97,14 @@ const App = () => {
       <h1>Notes app</h1>
       <Notification message={errorMessage} />
 
-      {user === null && 
-      
+      {user === null &&
+
       <Toggable buttonLabel="log in">
         <LoginForm handleLogin={handleLogin}
-                                    setUsername={setUsername}
-                                    setPassword={setPassword}
-                                    username={username}
-                                    password={password} />
+          setUsername={setUsername}
+          setPassword={setPassword}
+          username={username}
+          password={password} />
       </Toggable>
       }
       {user && <div>
@@ -117,7 +117,7 @@ const App = () => {
             <NoteForm createNote={addNote}/>
           </Toggable>
         }
-        </div>
+      </div>
       }
 
       <h2>Notes</h2>
@@ -126,10 +126,10 @@ const App = () => {
         <button onClick={() => setShowAll(!showAll)}>
           show {showAll ? 'important' : 'all' }
         </button>
-      </div> 
+      </div>
       <ul>
         <ul>
-          {notesToShow.map(note => 
+          {notesToShow.map(note =>
             <Note
               key={note.id}
               note={note}
