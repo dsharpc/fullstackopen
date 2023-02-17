@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Toggable from './Toggable'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, blogs, setBlogs }) => {
+const Blog = ({ blog, blogs, setBlogs, user }) => {
   const [numLikes, setNumLikes] = useState(blog.likes)
 
   const blogStyle = {
@@ -43,7 +43,7 @@ const Blog = ({ blog, blogs, setBlogs }) => {
           <p>url: {blog.url}</p>
           <p>likes: {numLikes} <button onClick={handleAddLike}>Like</button></p>
           <p>created by: {blog.user ? blog.user.name : ''}</p>
-          <button onClick={handleDeletion}>Delete Post</button>
+          { user.username === blog.user.username && <button onClick={handleDeletion}>Delete Post</button> }
         </div>
       </Toggable>
     </div>

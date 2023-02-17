@@ -25,9 +25,11 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
+    if(user) {
+      blogService.getAll().then(blogs =>
+        setBlogs( blogs )
+      )
+    }
   }, [user])
 
   const handleLoginSubmit = async (event) => {
@@ -53,7 +55,8 @@ const App = () => {
 
   return (
     <div>
-      {!user ? <LoginForm username={username}
+      {!user ? <LoginForm
+        username={username}
         setUsername={setUsername}
         password={password}
         setPassword={setPassword}
@@ -76,7 +79,7 @@ const App = () => {
           user={user}/>
       </Toggable>
       }
-      {user && <Blogs blogs={blogs} setBlogs={setBlogs}/>}
+      {user && <Blogs blogs={blogs} setBlogs={setBlogs} user={user}/>}
     </div>
   )
 }
