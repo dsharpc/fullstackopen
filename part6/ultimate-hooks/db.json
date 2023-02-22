@@ -1,0 +1,46 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "content": "custom hooks are awesome"
+    },
+    {
+      "id": 2,
+      "content": "best feature ever <3"
+    },
+    {
+      "content": "hello",
+      "id": 3
+    },
+    {
+      "content": "hello",
+      "id": 4
+    },
+    {
+      "content": "lolo",
+      "id": 5
+    }
+  ],
+  "persons": [
+    {
+      "id": 1,
+      "name": "Matti Luukkainen",
+      "number": "040-12344565"
+    },
+    {
+      "id": 2,
+      "name": "Tarja Halonen",
+      "number": "040-2223334"
+    },
+    {
+      "name": "john locke",
+      "number": "4523=54254235",
+      "id": 3
+    },
+    {
+      "name": "poprye",
+      "number": "3635-653546",
+      "id": 4
+    }
+  ]
+}
