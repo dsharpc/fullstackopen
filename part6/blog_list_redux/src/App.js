@@ -1,14 +1,17 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Routes, Route } from 'react-router-dom'
 import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
 import NotificationMessage from './components/NotificationMessage'
 import Toggable from './components/Toggable'
-// import loginService from './services/login'
-// import { showNotification } from './reducers/notificationReducer'
+import Users from './components/Users'
+import User from './components/User'
 import { getBlogsFromBackend } from './reducers/blogsReducer'
-import { checkIfAlreadyLoggedIn, logoutUser } from './reducers/userReducer'
+import { checkIfAlreadyLoggedIn } from './reducers/userReducer'
+import BlogDetail from './components/BlogDetail'
+import NavigationBar from './components/NavigationBar'
 
 const App = () => {
   const user = useSelector((state) => state.user)
@@ -26,27 +29,29 @@ const App = () => {
 
   return (
     <div>
-      {!user ? (
-        <LoginForm />
-      ) : (
-        <button
-          onClick={() => {
-            dispatch(logoutUser())
-          }}
-        >
-          Log Out
-        </button>
-      )}
-      {user && <p>Logged in as {user.name} </p>}
+      {user ? <NavigationBar /> : null}
+      {!user ? <LoginForm /> : null}
 
       <NotificationMessage />
 
-      {user && (
-        <Toggable buttonLabel="add new blog">
-          <NewBlogForm user={user} />
-        </Toggable>
-      )}
-      {user && <Blogs user={user} />}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            user && (
+              <div>
+                <Toggable buttonLabel="add new blog">
+                  <NewBlogForm user={user} />
+                </Toggable>
+                <Blogs user={user} />
+              </div>
+            )
+          }
+        />
+        <Route path="/users" element={<Users />} />
+        <Route path="/users/:id" element={<User />} />
+        <Route path="/blogs/:id" element={<BlogDetail />} />
+      </Routes>
     </div>
   )
 }

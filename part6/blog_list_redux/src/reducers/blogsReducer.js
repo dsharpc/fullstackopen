@@ -62,3 +62,16 @@ export const deleteBlog = (id) => {
     dispatch(removeBlog(id))
   }
 }
+
+export const addComment = (id, comment) => {
+  return async (dispatch, getState) => {
+    const blogs = getState().blogs
+    const blogToComment = blogs.find((blog) => blog.id === id)
+    const addedComment = await blogService.addComment(id, comment)
+    const commentedBlog = {
+      ...blogToComment,
+      comments: blogToComment.comments.concat(addedComment),
+    }
+    dispatch(updateBlog(commentedBlog))
+  }
+}
