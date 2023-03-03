@@ -28,7 +28,7 @@ const App = () => {
   }, [user])
 
   return (
-    <div>
+    <div className="container">
       {user ? <NavigationBar /> : null}
       {!user ? <LoginForm /> : null}
 

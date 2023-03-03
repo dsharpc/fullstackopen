@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { logoutUser } from '../reducers/userReducer'
+import { Button } from 'react-bootstrap'
 
 const NavigationBar = () => {
   const user = useSelector((state) => state.user)
@@ -24,13 +25,14 @@ const NavigationBar = () => {
         Users
       </Link>
       {user && <span style={style}>Logged in as {user.name} </span>}
-      <button
+      <Button
+        variant="light"
         onClick={() => {
           dispatch(logoutUser())
         }}
       >
         Log Out
-      </button>
+      </Button>
     </div>
   )
 }

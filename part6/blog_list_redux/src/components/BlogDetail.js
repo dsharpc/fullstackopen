@@ -28,7 +28,7 @@ const BlogDetail = () => {
 
   if (selectedBlog) {
     return (
-      <div>
+      <div className="container">
         <h3>{selectedBlog.title}</h3>
         <p>Url: {selectedBlog.url}</p>
         <p>

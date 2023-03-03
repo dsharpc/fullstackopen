@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { loginUser } from '../reducers/userReducer'
+import { Button } from 'react-bootstrap'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
@@ -21,7 +22,9 @@ const LoginForm = () => {
         Password: <input type="password" name="password"></input>
       </p>
 
-      <button type="submit">Log in</button>
+      <Button variant="primary" type="submit">
+        Log in
+      </Button>
     </form>
   )
 }
